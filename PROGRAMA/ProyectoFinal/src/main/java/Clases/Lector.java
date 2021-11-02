@@ -28,26 +28,19 @@ public class Lector {
     public int iniciarLector(Texto texto, TipoToken tipo, ArrayList<Token> tokens) {
 
         reiniciarLector(tipo);
-
-        boolean tokenValido = false;
         int columnaInicio = texto.getColumna() - texto.getValor().length();
         if (tipo != TipoToken.ERROR) {
             añadirPalabraRegistro(texto.getValor());
             for (int i = 0; i < texto.getValor().length(); i++) {
                 char actual = texto.getValor().charAt(i);
-                tokenValido = verificarTokenValido(actual);
+                verificarTokenValido(actual);
                 columnaInicio++;
-                if (tipo.equals(TipoToken.DECIMAL)) {
-                    if (tokenValido == false) {
-                        break;
-                    }
-                } else {
-                    if (tokenValido == false || !verificarEstadosAceptacion()) {
-                        break;
-                    }
+                if (estadoActual == "ERROR") {
+                    break;
                 }
             }
-            if (tokenValido == true && verificarEstadosAceptacion()) {
+            guardarMovimientosTotales();
+            if (estadoActual != "ERROR" && verificarEstadosAceptacion()) {
                 tokens.add(new Token(cadena, texto.getFila(), texto.getColumna(), tipo));
             } else {
                 tokens.add(new Token(cadena, texto.getFila(), columnaInicio, TipoToken.ERROR));
@@ -59,51 +52,91 @@ public class Lector {
         return cadena.length();
     }
 //Es el encargado de realizar los movimientos respectivos del automata, siguiendo las transiciones
-    private boolean verificarTokenValido(char actual) {
+
+    private void verificarTokenValido(char actual) {
+        boolean estadoError = false;
         for (int j = 0; j < funcionDeTransicion.length; j++) {
             char tipoToken = obtenerTipoCaracter(actual);
             String primeraPosicion = funcionDeTransicion[j][0];
             String valor = funcionDeTransicion[j][1];
             String siguiente = funcionDeTransicion[j][2];
-
-            if (primeraPosicion.equalsIgnoreCase(estadoActual) && valor.equalsIgnoreCase(String.valueOf(tipoToken))) {
-                añadirMovimientoRegistro(siguiente, actual);
-                estadoActual = siguiente;
-                cadena += actual;
-                return true;
+            if (estadoActual != "ERROR" && tipoToken != 'E') {
+                if (primeraPosicion.equalsIgnoreCase(estadoActual) && valor.equalsIgnoreCase(String.valueOf(tipoToken))) {
+                    añadirMovimientoRegistro(siguiente, actual);
+                    estadoActual = siguiente;
+                    cadena += actual;
+                    break;
+                }
+            } else {
+                estadoError = true;
+                break;
             }
+
         }
-        guardarMovimientosTotales();
-        cadena += actual;
-        return false;
+        if (estadoError != false) {
+            cadena += actual;
+            estadoActual = "ERROR";
+            
+        }
     }
 //Evalua un caracter y devuelve el tipo de caracter al que pertenece segun el alfabeto
+
     private char obtenerTipoCaracter(char actual) {
 
-        if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
-            return 'L';
-        } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoDigitos)) {
-            return 'D';
-        } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoDigitos)) {
-            return 'D';
-        } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)) {
-            return 'O';
-        } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)) {
-            return 'A';
-        } else {
-            if (tipo.equals(TipoToken.DECIMAL)) {
-                if (String.valueOf(actual).equalsIgnoreCase(".")) {
-                    return 'P';
+        switch (tipo) {
+            case NUMERO:
+                if (String.valueOf(actual).equalsIgnoreCase("0")) {
+                    return '0';
+                } else if (String.valueOf(actual).equalsIgnoreCase("-")) {
+                    return '-';
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)) {
+                    return 'D';
                 }
-            } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
-                return 'S';
-            } else {
-                return 'E';
-            }
+                break;
+            case IDENTIFICADOR:
+                if (String.valueOf(actual).equalsIgnoreCase("_")) {
+                    return '_';
+                } else if (String.valueOf(actual).equalsIgnoreCase("-")) {
+                    return '-';
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)) {
+                    return 'D';
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                    return 'L';
+                }
+                break;
+            case LITERAL:
+                if (String.valueOf(actual).equalsIgnoreCase("“")) {
+                    return '“';
+                } else if (String.valueOf(actual).equalsIgnoreCase("”")) {
+                    return '”';
+
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                    return 'L';
+
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoCaracteres)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
+                    return 'C';
+                }
+                break;
+            case COMENTARIO:
+                if (String.valueOf(actual).equalsIgnoreCase("/")) {
+                    return '/';
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                    return 'L';
+                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoCaracteres)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
+                    return 'C';
+                }
+                break;
         }
         return 'E';
     }
-/*Se encarga de otorgarle los valores al lector, tanto los estados de aceptación y la funcion de transicion
+
+    /*Se encarga de otorgarle los valores al lector, tanto los estados de aceptación y la funcion de transicion
   dependiendo del tipo del token del cual se va a evaluar*/
     private void definirEstadosYFuncion(TipoToken tipo) {
         switch (tipo) {
@@ -115,26 +148,19 @@ public class Lector {
                 this.estadosAceptacion = InformaciónTokens.estadosAceptacionNumero;
                 this.funcionDeTransicion = InformaciónTokens.funcionTransicionNumero;
                 break;
-            case DECIMAL:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionDecimal;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionDecimal;
+            case LITERAL:
+                this.estadosAceptacion = InformaciónTokens.estadosAceptacionLiteral;
+                this.funcionDeTransicion = InformaciónTokens.funcionTransicionLiteral;
                 break;
-            case PUNTUACION:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionPuntuacion;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionPuntuacion;
-                break;
-            case OPERADOR:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionOperador;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionOperador;
-                break;
-            case AGRUPACION:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionAgrupacion;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionAgrupacion;
+            case COMENTARIO:
+                this.estadosAceptacion = InformaciónTokens.estadosAceptacionComentario;
+                this.funcionDeTransicion = InformaciónTokens.funcionTransicionComentario;
                 break;
         }
 
     }
 //Devuelve una verificación si el char enviado existe dentro de un alfabeto en especifico
+
     private boolean evaluarCHAR(char charEvaluado, String[] datos) {
         for (int i = 0; i < datos.length; i++) {
             if (String.valueOf(charEvaluado).equalsIgnoreCase(datos[i])) {
@@ -144,6 +170,7 @@ public class Lector {
         return false;
     }
 //Verifica si el estado actual corresponde a un estado de aceptación
+
     private boolean verificarEstadosAceptacion() {
         for (int i = 0; i < estadosAceptacion.length; i++) {
             if (estadoActual.equalsIgnoreCase(estadosAceptacion[i])) {
@@ -153,6 +180,7 @@ public class Lector {
         return false;
     }
 //Es el encargado de reiniciar el lector, segun el tipo de token nuevo que se evaluara
+
     private void reiniciarLector(TipoToken tipo) {
         this.tipo = tipo;
         definirEstadosYFuncion(tipo);
@@ -160,15 +188,18 @@ public class Lector {
         cadena = "";
     }
 //Se encarga de agregar una nueva palabra al registro de AFD optimo
+
     private void añadirPalabraRegistro(String token) {
         movimientos = new ArrayList<>();
         movimientos.add(token);
     }
 //Se encarga de agregar un nuevo movimiento al registro de AFD optimo
+
     private void añadirMovimientoRegistro(String estado, char valor) {
         movimientos.add("Me moví del estado " + estadoActual + " al estado " + estado + " con una " + valor);
     }
 //Se encarga de guardar y agregar el registro total de una palabra a una lista con todos los registros de todos los lexemas
+
     private void guardarMovimientosTotales() {
         movimientosTotales.add(movimientos);
     }
@@ -176,5 +207,5 @@ public class Lector {
     public ArrayList<ArrayList<String>> getMovimientosTotales() {
         return movimientosTotales;
     }
-    
+
 }

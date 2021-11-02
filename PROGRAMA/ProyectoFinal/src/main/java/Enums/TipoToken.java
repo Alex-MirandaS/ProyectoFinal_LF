@@ -12,10 +12,8 @@ public enum TipoToken {
 
     IDENTIFICADOR("IDENTIFICADOR"),
     NUMERO("NUMERO"),
-    DECIMAL("DECIMAL"),
-    PUNTUACION("PUNTUACION"),
-    AGRUPACION("AGRUPACION"),
-    OPERADOR("OPERADOR"),
+    LITERAL("LITERAL"),
+    COMENTARIO("COMENTARIO"),
     ERROR("ERROR");
 
     private String nombre;

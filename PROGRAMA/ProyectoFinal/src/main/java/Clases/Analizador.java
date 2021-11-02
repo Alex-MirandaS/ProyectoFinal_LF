@@ -70,60 +70,42 @@ public class Analizador {
 //Se encarga de clasificar el token al cual podria pertenecer una palabra, segun su caracter inicial
     private void verificarTipoToken(Texto texto, ArrayList<Token> lista) {
         char caracterInicial = texto.getValor().charAt(0);
-
-        if (evaluarCHAR(caracterInicial, InformaciónTokens.alfabetoLetras)) {
-            evaluarIdentificador(texto, lista);
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.alfabetoDigitos)) {
-            evaluarNumero(texto, lista);
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.alfabetoSignosPuntuacion)) {
-            evaluarPuntuacion(texto, lista);
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.alfabetoSignosOperacion)) {
-            evaluarOperador(texto, lista);
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.alfabetoSignosAgrupacion)) {
-            evaluarAgrupacion(texto, lista);
+        TipoToken tipo = null;
+        if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesIdentificador)) {
+            tipo = TipoToken.IDENTIFICADOR;
+        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesNumero)) {
+            tipo = TipoToken.NUMERO;
+        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesLiteral)) {
+            tipo = TipoToken.LITERAL;
+        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesComentario)) {//&& evaluarCHAR(texto.getValor().charAt(1), InformaciónTokens.inicialesComentario)
+            tipo = TipoToken.COMENTARIO;
         } else {
-            evaluarError(texto, lista);
+            tipo = TipoToken.ERROR;
+        }
+        evaluarToken(tipo, texto, lista);
+    }
+
+    //Se encarga de evaluar un texto, tomandolo como un posible token especifico
+    private void evaluarToken(TipoToken tipoToken, Texto texto, ArrayList<Token> lista) {
+        int cCaracteres = lector.iniciarLector(texto, tipoToken, lista);
+        if (tipoToken != tipoToken.ERROR) {
+            darSeguimiento(cCaracteres, texto, lista);
         }
     }
-//Se encarga de evaluar un texto, tomandolo como un posible identificador
-    private void evaluarIdentificador(Texto texto, ArrayList<Token> lista) {
-        int cCaracteres = lector.iniciarLector(texto, TipoToken.IDENTIFICADOR, lista);
-        darSeguimiento(cCaracteres, texto, lista);
-    }
-//Se encarga de evaluar un texto, tomandolo como un posible numero
-    private void evaluarNumero(Texto texto, ArrayList<Token> lista) {
-        int cCaracteres = lector.iniciarLector(texto, TipoToken.NUMERO, lista);
-        evaluarDecimal(cCaracteres, texto, lista);
-    }
-//Se encarga de evaluar un texto, tomandolo como un posible puntuacion
-    private void evaluarPuntuacion(Texto texto, ArrayList<Token> lista) {
-        int cCaracteres = lector.iniciarLector(texto, TipoToken.PUNTUACION, lista);
-        darSeguimiento(cCaracteres, texto, lista);
-    }
-//Se encarga de evaluar un texto, tomandolo como un posible operador
-    private void evaluarOperador(Texto texto, ArrayList<Token> lista) {
-        int cCaracteres = lector.iniciarLector(texto, TipoToken.OPERADOR, lista);
-        darSeguimiento(cCaracteres, texto, lista);
-    }
-//Se encarga de evaluar un texto, tomandolo como un posible agrupacion
-    private void evaluarAgrupacion(Texto texto, ArrayList<Token> lista) {
-        int cCaracteres = lector.iniciarLector(texto, TipoToken.AGRUPACION, lista);
-        darSeguimiento(cCaracteres, texto, lista);
-    }
-//Se encarga de evaluar y tratar a un texto como error
-    private void evaluarError(Texto texto, ArrayList<Token> lista) {
-        lector.iniciarLector(texto, TipoToken.ERROR, lista);
-    }
+
 //Se encarga de verificar si un char en espeficico es parte del abecedario aceptado por el automata
-    private boolean evaluarCHAR(char charEvaluado, String[] datos) {
+    private boolean evaluarCHAR(char charEvaluado, String[][] datos) {
         for (int i = 0; i < datos.length; i++) {
-            if (String.valueOf(charEvaluado).equalsIgnoreCase(datos[i])) {
-                return true;
+            for (int j = 0; j < datos[i].length; j++) {
+                if (String.valueOf(charEvaluado).equalsIgnoreCase(datos[i][j])) {
+                    return true;
+                }
             }
         }
         return false;
     }
 //Se encarga de crear un nuevo texto con el residuo de uno fallido, ya que esto permite la recuperación de errores
+
     private Texto redimensionarTexto(Texto texto, int cCaracteres) {
         Texto textoTemp = null;
         char[] caracteres = texto.getValor().toCharArray();
@@ -134,28 +116,17 @@ public class Analizador {
         textoTemp = new Texto(nuevoTexto, texto.getFila(), texto.getColumna());
         return textoTemp;
     }
-/*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
+
+    /*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
   residuos de texto  */
     private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista) {
         if (cCaracteres != texto.getValor().length()) {
             verificarTipoToken(redimensionarTexto(texto, cCaracteres), lista);
         }
     }
-//Se encarga de evaluar un texto, tomandolo como un posible decimal
-    private void evaluarDecimal(int cCaracteres, Texto texto, ArrayList<Token> lista) {
-
-        if (cCaracteres != texto.getValor().length()) {
- 
-            if (lista.size() != 0) {
-                lista.remove(lista.size() - 1);
-            }
-            int cCaracteres1 = lector.iniciarLector(texto, TipoToken.DECIMAL, lista);
-            darSeguimiento(cCaracteres1, texto, lista);
-        }
-    }
 
     public Lector getLector() {
         return lector;
     }
-    
+
 }

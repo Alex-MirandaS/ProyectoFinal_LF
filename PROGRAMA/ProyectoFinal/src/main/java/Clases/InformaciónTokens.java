@@ -13,51 +13,57 @@ public class InformaciónTokens {
     /*DATOS DE LOS TOKENS
     Se incluyen los alfabetos, estados de aceptación y función de transición correspondiente a cada uno de los tipos de token disponibles
     L = Letra
-    D = Digito (numero)
-    P = Punto
-    S = Signo de puntuación
-    O = Signo de Operación
-    A = Signo de Agrupación
+    D = Numero
+    C = Caracter
+    
     
      */
     public static final String[] alfabetoLetras = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
         "t", "u", "v", "w", "x", "y", "z"};
-    public static final String[] alfabetoDigitos = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    public static final String[] alfabetoNumero = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+
     public static final String[] alfabetoSignosPuntuacion = {".", ",", ";", ":"};
     public static final String[] alfabetoSignosOperacion = {"+", "-", "*", "/", "%"};
-    public static final String[] alfabetoSignosAgrupacion = {"(", ")", "[", "]", "{", "}"};
+    public static final String[] alfabetoSignosAgrupacion = {"(", ")", "[", "]", "{", "}", "“", "”", "'", "<", ">"};
+    public static final String[] alfabetoCaracteres = {"_", "="};
+    //VALORES INICIALES
+    //IDENTIFICADOR
+    public static final String[][] inicialesIdentificador = {alfabetoLetras, alfabetoCaracteres};
+    public static final String[][] inicialesNumero = {alfabetoNumero, {"-"}};
+    public static final String[][] inicialesLiteral = {{"“"}};
+    public static final String[][] inicialesComentario = {{"/"}};
 
     //IDENTIFICADOR
     public static final String[] estadosAceptacionIdentificador = {"S1"};
     public static final String[][] funcionTransicionIdentificador
-            = {{"S0", "L", "S1"}, {"S0", "D", "ERROR"},
-            {"S1", "L", "S1"}, {"S1", "D", "S1"}};
+            = {{"S0", "_", "S1"}, {"S0", "L", "S1"}, {"S0", "D", "ERROR"}, {"S0", "-", "ERROR"},
+            {"S1", "_", "S1"}, {"S1", "L", "S1"}, {"S1", "D", "S1"}, {"S1", "-", "S1"}
+            };
+
     //NUMERO
-    public static final String[] estadosAceptacionNumero = {"S1"};
+    public static final String[] estadosAceptacionNumero = {"S1", "S2"};
     public static final String[][] funcionTransicionNumero
-            = {{"S0", "D", "S1"},
-            {"S1", "D", "S1"}};
-    //DECIMAL
-    public static final String[] estadosAceptacionDecimal = {"S3"};
-    public static final String[][] funcionTransicionDecimal
-            = {{"S0", "D", "S1"}, {"S0", "P", "ERROR"},
-            {"S1", "D", "S1"}, {"S1", "P", "S2"},
-            {"S2", "D", "S3"}, {"S2", "P", "ERROR"},
-            {"S3", "D", "S3"}, {"S1", "P", "ERROR"}};
-    //PUNTUACION
-    public static final String[] estadosAceptacionPuntuacion = {"S1"};
-    public static final String[][] funcionTransicionPuntuacion
-            = {{"S0", "S", "S1"},
-            {"S1", "S", "ERROR"}};
-    //OPERADOR
-    public static final String[] estadosAceptacionOperador = {"S1"};
-    public static final String[][] funcionTransicionOperador
-            = {{"S0", "O", "S1"},
-            {"S1", "O", "ERROR"}};
-    //AGRUPACION
-    public static final String[] estadosAceptacionAgrupacion = {"S1"};
-    public static final String[][] funcionTransicionAgrupacion
-            = {{"S0", "A", "S1"},
-            {"S1", "A", "ERROR"}};
+            = {{"S0", "0", "S1"}, {"S0", "D", "S2"}, {"S0", "-", "S3"},
+            {"S1", "0", "ERROR"}, {"S1", "D", "ERROR"}, {"S1", "-", "ERROR"},
+            {"S2", "0", "S2"}, {"S2", "D", "S2"}, {"S2", "-", "ERROR"},
+            {"S3", "0", "ERROR"}, {"S3", "D", "S2"}, {"S3", "-", "ERROR"}
+            };
+    //LITERAL
+    public static final String[] estadosAceptacionLiteral = {"S2"};
+    public static final String[][] funcionTransicionLiteral
+            = {{"S0", "“", "S1"}, {"S0", "L", "ERROR"}, {"S0", "C", "ERROR"}, {"S0", "”", "ERROR"},
+            {"S1", "“", "ERROR"}, {"S1", "L", "S1"}, {"S1", "C", "S1"}, {"S1", "”", "S2"},
+            {"S2", "“", "ERROR"}, {"S2", "L", "ERROR"}, {"S2", "C", "ERROR"}, {"S2", "”", "ERROR"}
+            };
+
+    //COMENTARIO
+    public static final String[] estadosAceptacionComentario = {"S3"};
+    public static final String[][] funcionTransicionComentario
+            //PENDIENTE
+            = {{"S0", "/", "S1"}, {"S0", "L", "ERROR"}, {"S0", "C", "ERROR"},
+            {"S1", "/", "S2"}, {"S1", "L", "ERROR"}, {"S1", "C", "ERROR"},
+            {"S2", "/", "ERROR"}, {"S2", "L", "S3"}, {"S2", "C", "S3"},
+            {"S3", "/", "ERROR"}, {"S3", "L", "S3"}, {"S3", "C", "S3"}
+            };
 
 }
