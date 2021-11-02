@@ -25,7 +25,7 @@ public class InformaciónTokens {
     public static final String[] alfabetoSignosPuntuacion = {".", ",", ";", ":"};
     public static final String[] alfabetoSignosOperacion = {"+", "-", "*", "/", "%"};
     public static final String[] alfabetoSignosAgrupacion = {"(", ")", "[", "]", "{", "}", "“", "”", "'", "<", ">"};
-    public static final String[] alfabetoCaracteres = {"_", "="};
+    public static final String[] alfabetoCaracteres = {"_", "=", " "};
     //VALORES INICIALES
     //IDENTIFICADOR
     public static final String[][] inicialesIdentificador = {alfabetoLetras, alfabetoCaracteres};
