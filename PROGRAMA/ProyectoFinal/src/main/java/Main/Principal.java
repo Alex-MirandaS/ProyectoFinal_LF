@@ -6,8 +6,8 @@ package Main;
 
 import Archivos.EscritorArchivosTexto;
 import Archivos.LectorArchivosEnTexto;
-import Clases.Analizador;
-import Controladores.ControlPrincipal;
+import Clases.AnalizadorL;
+import Controladores.ControlPrincipalAL;
 import GUI.BusquedaGUI;
 import GUI.PrincipalGUI;
 import GUI.ReportesGUI;
@@ -30,8 +30,8 @@ public class Principal {
     //CLASES
     private LectorArchivosEnTexto lectorArchivos = new LectorArchivosEnTexto();
     private EscritorArchivosTexto escritorArchivos = new EscritorArchivosTexto();
-    private Analizador analizador = new Analizador();
-    private ControlPrincipal controlPrincipal = new ControlPrincipal(this);
+    private AnalizadorL analizador = new AnalizadorL();
+    private ControlPrincipalAL controlPrincipal = new ControlPrincipalAL(this);
 
     public void inicio() {
         principalGUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -84,11 +84,11 @@ public class Principal {
         return escritorArchivos;
     }
 
-    public Analizador getAnalizador() {
+    public AnalizadorL getAnalizador() {
         return analizador;
     }
 
-    public ControlPrincipal getControlPrincipal() {
+    public ControlPrincipalAL getControlPrincipal() {
         return controlPrincipal;
     }
 

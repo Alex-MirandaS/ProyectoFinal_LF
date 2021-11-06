@@ -14,9 +14,9 @@ import java.util.ArrayList;
  *
  * @author Alex
  */
-public class Analizador {
+public class AnalizadorL {
 
-    private Lector lector = new Lector();
+    private LectorAnalizadorL lector = new LectorAnalizadorL();
 
     //Se encarga de realizar las correcciones al texto y evaluarlo, fila por fila
     public ArrayList<Token> evaluarTextoTotal(ArrayList<String> filas) {
@@ -72,7 +72,9 @@ public class Analizador {
     private void verificarTipoToken(Texto texto, ArrayList<Token> lista) {
         char caracterInicial = texto.getValor().charAt(0);
         TipoToken tipo = null;
-        if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesIdentificador)) {
+        if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesPalabraR)) {
+            tipo = TipoToken.PALABRAR;
+        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesIdentificador)) {
             tipo = TipoToken.IDENTIFICADOR;
         } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesNumero)) {
             tipo = TipoToken.NUMERO;
@@ -80,6 +82,8 @@ public class Analizador {
             tipo = TipoToken.LITERAL;
         } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesComentario)) {//&& evaluarCHAR(texto.getValor().charAt(1), InformaciónTokens.inicialesComentario)
             tipo = TipoToken.COMENTARIO;
+        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesExtras)) {
+            tipo = TipoToken.EXTRAS;
         } else {
             tipo = TipoToken.ERROR;
         }
@@ -89,7 +93,10 @@ public class Analizador {
     //Se encarga de evaluar un texto, tomandolo como un posible token especifico
     private void evaluarToken(TipoToken tipoToken, Texto texto, ArrayList<Token> lista) {
         int cCaracteres = lector.iniciarLector(texto, tipoToken, lista);
-        if (tipoToken != tipoToken.ERROR) {
+        if (cCaracteres != texto.getValor().length() && tipoToken == TipoToken.PALABRAR) {
+            lista.remove(lista.size() - 1);
+            evaluarToken(TipoToken.IDENTIFICADOR, texto, lista);
+        } else if (tipoToken != TipoToken.ERROR) {
             darSeguimiento(cCaracteres, texto, lista);
         }
     }
@@ -107,22 +114,29 @@ public class Analizador {
     }
 //Se encarga de crear un nuevo texto con el residuo de uno fallido, ya que esto permite la recuperación de errores
 
-    private Texto redimensionarTexto(Texto texto, int cCaracteres) {
+    private Texto redimensionarTexto(Texto texto, int cCaracteres, boolean iniciarPrincipio) {
         Texto textoTemp = null;
         char[] caracteres = texto.getValor().toCharArray();
         String nuevoTexto = "";
-        for (int i = cCaracteres; i < texto.getValor().length(); i++) {
-            nuevoTexto += caracteres[i];
+        if (iniciarPrincipio) {
+            for (int i = cCaracteres; i < texto.getValor().length(); i++) {
+                nuevoTexto += caracteres[i];
+            }
+        } else {
+            for (int i = 0; i < texto.getValor().length()-cCaracteres; i++) {
+                nuevoTexto += caracteres[i];
+            }
         }
-        textoTemp = new Texto(nuevoTexto, texto.getFila(), texto.getColumna());
-        return textoTemp;
-    }
+    
+    textoTemp  = new Texto(nuevoTexto, texto.getFila(), texto.getColumna());
+    return textoTemp ;
+}
 
-    /*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
+/*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
   residuos de texto  */
-    private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista) {
+private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista) {
         if (cCaracteres != texto.getValor().length()) {
-            verificarTipoToken(redimensionarTexto(texto, cCaracteres), lista);
+            verificarTipoToken(redimensionarTexto(texto, cCaracteres, true), lista);
         }
     }
 
@@ -130,59 +144,89 @@ public class Analizador {
         ArrayList<Texto> textos = new ArrayList<>();
         TipoToken tipoTemp = null;
         String valorTemp = "";
-        Texto temp;
-        char borrar;
         int i;
         for (i = 0; i < temporal.size(); i++) {
-            
+
             if (tipoTemp == null) {
-                if (temporal.get(i).getValor().charAt(0) == '“') {
+                String borrar = temporal.get(i).getValor();
+                if (temporal.get(i).getValor().charAt(0) == '"') {
                     tipoTemp = TipoToken.LITERAL;
-                    i--;
-                }else if (temporal.get(i).getValor().charAt(0) == '/' && temporal.get(i).getValor().charAt(1) == '/') {
+                } else if (temporal.get(i).getValor().charAt(0) == '/' && temporal.get(i).getValor().charAt(1) == '/') {
                     tipoTemp = TipoToken.COMENTARIO;
-                    i--;
+                } else if (temporal.get(i).getValor().charAt(0) == '(' || temporal.get(i).getValor().charAt(temporal.get(i).getValor().length() - 1) == ')') {
+                    tipoTemp = TipoToken.EXTRAS;
+                } else {
+                    tipoTemp = TipoToken.ERROR;
                 }
-                
-            }else{
-                switch(tipoTemp){
+                i--;
+            } else {
+                switch (tipoTemp) {
                     case LITERAL:
-                        if (temporal.get(i).getValor().charAt(temporal.get(i).getValor().length()-1) != '”') {
+                        if (temporal.get(i).getValor().charAt(temporal.get(i).getValor().length() - 1) != '"') {
                             valorTemp += temporal.get(i).getValor() + añadirEspacios(temporal.get(i), temporal.get(i + 1));
-                        }else{
+                        } else {
                             valorTemp += temporal.get(i).getValor();
                         }
-                        
-                        if (valorTemp.charAt(0) == '“' && valorTemp.charAt(valorTemp.length()-1) == '”') {
+
+                        if (valorTemp.charAt(0) == '"' && valorTemp.charAt(valorTemp.length() - 1) == '"') {
                             textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
                             valorTemp = "";
                             tipoTemp = null;
                         }
                         break;
                     case COMENTARIO:
-                        if (i+1 < temporal.size()) {
-                            valorTemp += temporal.get(i).getValor() + añadirEspacios(temporal.get(i), temporal.get(i+1));
-                        }else{
+                        if (i + 1 < temporal.size()) {
+                            valorTemp += temporal.get(i).getValor() + añadirEspacios(temporal.get(i), temporal.get(i + 1));
+                        } else {
                             valorTemp += temporal.get(i).getValor();
                         }
-                        
-                            
                         break;
+                    case EXTRAS:
+                        
+                        if (temporal.get(i).getValor().charAt(0) == '(') {
+                            for (int k = 0; k < temporal.get(i).getValor().length(); k++) {
+                                if (temporal.get(i).getValor().charAt(k) != '(') {
+                                    valorTemp += temporal.get(i).getValor().charAt(k);
+                                }else{
+                                    textos.add(new Texto(String.valueOf(temporal.get(i).getValor().charAt(k)), temporal.get(i).getFila(), temporal.get(i).getColumna() - (temporal.get(i).getValor().length() - (k + 1))));
+                                    }
+                            }
+                        }else if (temporal.get(i).getValor().charAt(temporal.get(i).getValor().length()-1) == ')') {
+                            for (int k = 0; k < temporal.get(i).getValor().length(); k++) {
+                                if (temporal.get(i).getValor().charAt(k) != ')') {
+                                    valorTemp += temporal.get(i).getValor().charAt(k);
+                                }else{
+                                    if (valorTemp.length() != 0) {
+                                        textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
+                                        valorTemp = "";
+                                        
+                                    }
+                       
+                                    textos.add(new Texto(String.valueOf(temporal.get(i).getValor().charAt(k)), temporal.get(i).getFila(), temporal.get(i).getColumna() - (temporal.get(i).getValor().length() - (k + 1))));
+                                }
+                            }
+                        }
+                        tipoTemp = null;        
+                        break;
+            
                     default:
-                          textos.add(temporal.get(i));
+                        textos.add(temporal.get(i));
+                        tipoTemp = null;
                         break;
                 }
             }
-            
-            if(valorTemp.length() != 0 && tipoTemp != TipoToken.LITERAL){
-                textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
-            }
-           
+                                    
+            if (valorTemp.length() != 0 && tipoTemp != TipoToken.LITERAL) {
+            textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
+            valorTemp = "";
+            tipoTemp = null;
         }
-        return textos;
-    }
 
-    public Lector getLector() {
+    }
+    return textos ;
+}
+
+public LectorAnalizadorL getLector() {
         return lector;
     }
 

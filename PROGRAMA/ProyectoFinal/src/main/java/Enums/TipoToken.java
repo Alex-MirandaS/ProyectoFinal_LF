@@ -14,6 +14,8 @@ public enum TipoToken {
     NUMERO("NUMERO"),
     LITERAL("LITERAL"),
     COMENTARIO("COMENTARIO"),
+    EXTRAS("EXTRAS"),
+    PALABRAR("PALABRAR"),
     ERROR("ERROR");
 
     private String nombre;

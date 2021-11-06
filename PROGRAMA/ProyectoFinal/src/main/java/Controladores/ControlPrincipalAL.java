@@ -31,14 +31,14 @@ import javax.swing.text.Highlighter;
  *
  * @author Alex
  */
-public class ControlPrincipal {
+public class ControlPrincipalAL {
 
     private Principal principal;
 
     private ArrayList<String> filasArchivo = new ArrayList<>();
     private ArrayList<Token> tokens = new ArrayList<>();
 
-    public ControlPrincipal(Principal principal) {
+    public ControlPrincipalAL(Principal principal) {
         this.principal = principal;
     }
 //Se encarga de seleecionar el archivo y realizar el proceso correspondiente de extraccion de texto del mismo.
@@ -67,7 +67,7 @@ public class ControlPrincipal {
              JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, SE NECESITA VOLVER A ABRIRLO");
              principal.getPrincipalGUI().getAreaTexto().setText("");
         } catch (IOException ex) {
-            Logger.getLogger(ControlPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ControlPrincipalAL.class.getName()).log(Level.SEVERE, null, ex);
 
         }
 

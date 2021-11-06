@@ -4,7 +4,7 @@
  */
 package Main;
 
-import Clases.Analizador;
+import Clases.AnalizadorL;
 import GUI.InicioGUI;
 import java.util.Scanner;
 

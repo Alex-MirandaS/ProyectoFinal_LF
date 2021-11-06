@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * @author Alex
  */
-public class Lector {
+public class LectorAnalizadorL {
 
     private String estadoActual = "S0";
     private String cadena = "";
@@ -61,7 +61,7 @@ public class Lector {
             String valor = funcionDeTransicion[j][1];
             String siguiente = funcionDeTransicion[j][2];
             if (estadoActual != "ERROR" && tipoToken != 'E') {
-                if (primeraPosicion.equalsIgnoreCase(estadoActual) && valor.equalsIgnoreCase(String.valueOf(tipoToken))) {
+                if (primeraPosicion.equalsIgnoreCase(estadoActual) && valor.equals(String.valueOf(tipoToken))) {
                     añadirMovimientoRegistro(siguiente, actual);
                     estadoActual = siguiente;
                     cadena += actual;
@@ -76,7 +76,7 @@ public class Lector {
         if (estadoError != false) {
             cadena += actual;
             estadoActual = "ERROR";
-            
+
         }
     }
 //Evalua un caracter y devuelve el tipo de caracter al que pertenece segun el alfabeto
@@ -105,7 +105,10 @@ public class Lector {
                 }
                 break;
             case LITERAL:
-                if (String.valueOf(actual).equalsIgnoreCase("“")) {
+                if (String.valueOf(actual).equalsIgnoreCase(String.valueOf('"'))) {
+                    return '"';
+                }
+                else if (String.valueOf(actual).equalsIgnoreCase("“")) {
                     return '“';
                 } else if (String.valueOf(actual).equalsIgnoreCase("”")) {
                     return '”';
@@ -115,6 +118,7 @@ public class Lector {
 
                 } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoCaracteres)
                         || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)
+                        || evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)
                         || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
                         || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
                     return 'C';
@@ -130,6 +134,16 @@ public class Lector {
                         || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
                         || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
                     return 'C';
+                }
+                break;
+            case PALABRAR:
+                if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                    return actual;
+                }
+                break;
+            case EXTRAS:
+                if (evaluarCHAR(actual, InformaciónTokens.inicialesExtras[0])) {
+                    return actual;
                 }
                 break;
         }
@@ -155,6 +169,14 @@ public class Lector {
             case COMENTARIO:
                 this.estadosAceptacion = InformaciónTokens.estadosAceptacionComentario;
                 this.funcionDeTransicion = InformaciónTokens.funcionTransicionComentario;
+                break;
+            case PALABRAR:
+                this.estadosAceptacion = InformaciónTokens.estadosAceptacionPR;
+                this.funcionDeTransicion = InformaciónTokens.funcionTransicionPR;
+                break;
+            case EXTRAS:
+                this.estadosAceptacion = InformaciónTokens.estadosAceptacionExtras;
+                this.funcionDeTransicion = InformaciónTokens.funcionTransicionExtras;
                 break;
         }
 
