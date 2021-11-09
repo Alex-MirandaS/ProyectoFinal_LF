@@ -4,11 +4,13 @@
  */
 package Controladores;
 
+import Clases.AnalizadorS;
 import Enums.TipoToken;
 import GUI.PrincipalGUI;
 import GUI.TablaResultados;
 import Main.Principal;
 import Objetos.Contable;
+import Objetos.Gramatica;
 import Objetos.Token;
 import java.awt.Color;
 import java.io.File;
@@ -37,22 +39,52 @@ public class ControlPrincipalAL {
 
     private ArrayList<String> filasArchivo = new ArrayList<>();
     private ArrayList<Token> tokens = new ArrayList<>();
+    private String pathDocumentoActual;
 
     public ControlPrincipalAL(Principal principal) {
         this.principal = principal;
     }
+
+    private boolean areaTextoVacía() {
+        if (!principal.getPrincipalGUI().getAreaTexto().getText().equals("")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void guardarCambios(boolean eleccion) {
+        if (eleccion) {
+            guardarArchivo();
+        }
+        pathDocumentoActual = "";
+        principal.getPrincipalGUI().getAreaTexto().setText("");
+
+    }
+
+    private void verificarCambiosArchivo() {
+        if (!areaTextoVacía()) {
+            principal.getGuardarCambios().setVisible(true);
+        }
+    }
+
+    public void nuevoArchivo() {
+        verificarCambiosArchivo();
+    }
+
 //Se encarga de seleecionar el archivo y realizar el proceso correspondiente de extraccion de texto del mismo.
     public ArrayList<String> seleccionarArchivo() {
-
+        verificarCambiosArchivo();
         JFileChooser fileChosser = new JFileChooser();
         int seleccion = fileChosser.showOpenDialog(principal.getPrincipalGUI());
 
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             //aqui selecciono y guardo el FILE que va a utilizar el FileReader
             File fichero = fileChosser.getSelectedFile();
-
             try {
                 filasArchivo = principal.getLectorArchivos().leerFichero(fichero);
+                mostrarTextArea(principal.getPrincipalGUI().getAreaTexto());
+                pathDocumentoActual = fichero.getAbsolutePath();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al leer el archivo");
             }
@@ -60,12 +92,27 @@ public class ControlPrincipalAL {
         return filasArchivo;
     }
 //Se encarga de guardar un archivo y reiniciar el area de texto, para volver a abrir el archivo
+
     public void guardarArchivo() {
 
         try {
             principal.getEscritorArchivos().guardarArchivoTexto(principal.getPrincipalGUI().getAreaTexto().getText());
-             JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, SE NECESITA VOLVER A ABRIRLO");
-             principal.getPrincipalGUI().getAreaTexto().setText("");
+            JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, SE NECESITA VOLVER A ABRIRLO");
+            principal.getPrincipalGUI().getAreaTexto().setText("");
+        } catch (IOException ex) {
+            Logger.getLogger(ControlPrincipalAL.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+    }
+
+    //Se encarga de guardar un archivo y reiniciar el area de texto, para volver a abrir el archivo
+    public void guardarArchivoComo() {
+
+        try {
+            principal.getEscritorArchivos().guardarArchivoTexto(principal.getPrincipalGUI().getAreaTexto().getText());
+            JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, SE NECESITA VOLVER A ABRIRLO");
+            principal.getPrincipalGUI().getAreaTexto().setText("");
         } catch (IOException ex) {
             Logger.getLogger(ControlPrincipalAL.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -73,6 +120,7 @@ public class ControlPrincipalAL {
 
     }
 //Se encarga de agregar al area de texto, todo el texto ordenado, correspondiente al texto de entrada
+
     public void mostrarTextArea(JTextArea areaTexto) {
         areaTexto.setText("");
         for (int i = 0; i < filasArchivo.size(); i++) {
@@ -81,10 +129,12 @@ public class ControlPrincipalAL {
         }
     }
 //Se encarga de verificar todas las palabras que estan incluidas en las filas del archivo de texto cargado
+
     public void verificarTokens() {
         tokens = principal.getAnalizador().evaluarTextoTotal(filasArchivo);
     }
 //Se encarga de mostrar los reportes, si existe algun error o si el archivo esta libre de errores
+
     public void mostrarReportes() {
         verificarTokens();
         for (int i = 0; i < tokens.size(); i++) {
@@ -101,6 +151,7 @@ public class ControlPrincipalAL {
         principal.getReportesGUI().setVisible(true);
     }
 //Se encarga de abrir el reporte de errores del archivo seleccionado
+
     public void abrirReporteErrores() {
 
         TablaResultados tabla = new TablaResultados();
@@ -118,6 +169,7 @@ public class ControlPrincipalAL {
         tabla.setVisible(true);
     }
 //Se encarga de abrir el reporte de tokens del archivo seleccionado
+
     public void abrirReporteTokens() {
         TablaResultados tabla = new TablaResultados();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -136,6 +188,7 @@ public class ControlPrincipalAL {
 
     }
 //Se encarga de abrir el reporte de recuento de lexemas del archivo seleccionado
+
     public void abrirRecuentoLexemas() {
         ArrayList<Contable> contables = recontarTokens();
         TablaResultados tabla = new TablaResultados();
@@ -152,6 +205,7 @@ public class ControlPrincipalAL {
         tabla.setVisible(true);
     }
 //Se encarta de realizar el conteo respectivo de los tokens, evaluando si existen errores
+
     public ArrayList<Contable> recontarTokens() {
         ArrayList<Token> tokensTemp = new ArrayList<>();
         ArrayList<Contable> contables = new ArrayList<>();
@@ -188,6 +242,7 @@ public class ControlPrincipalAL {
         return contables;
     }
 //Se encarga de abrir el reporte de los movimientos de AFD optimo del archivo seleccionado
+
     public void abrirReporteAFD() {
 
         TablaResultados tabla = new TablaResultados();
@@ -203,10 +258,12 @@ public class ControlPrincipalAL {
         }
     }
 //Se encarga de abrir la busqueda de patrones del archivo seleccionado
+
     public void abrirBusquedaPatrones() {
         principal.getBusquedaGUI().setVisible(true);
     }
 //Se encarga de buscar y resaltar los valores que se asemejan a un valor ingresado
+
     public void buscarPatron(JTextArea areaTexto, String texto) {
         if (texto.length() >= 1) {
             DefaultHighlighter.DefaultHighlightPainter highlightPainter = new DefaultHighlighter.DefaultHighlightPainter(Color.YELLOW);
@@ -228,6 +285,7 @@ public class ControlPrincipalAL {
         }
     }
 //Se encarga de ordenar la lista de contables, de mayor a menor.
+
     public void burbuja(ArrayList<Contable> contables) {
         int i, j;
         Contable aux;
@@ -240,6 +298,21 @@ public class ControlPrincipalAL {
                     contables.set(j, aux);
                 }
             }
+        }
+    }
+
+    public void analisisSintactico() {
+        AnalizadorS analizadorS = new AnalizadorS();
+        ArrayList<Gramatica> gramaticas = analizadorS.evaluarTokensTotales(tokens);
+
+        for (int i = 0; i < gramaticas.size(); i++) {
+            System.out.println(gramaticas.get(i).getTipo().getNombre());
+            for (int j = 0; j < gramaticas.get(i).getTokensGramatica().size(); j++) {
+
+                System.out.println(gramaticas.get(i).getTokensGramatica().get(j).getValor());
+            }
+            System.out.println("SI FUNCIONA WEY :D");
+            System.out.println("");
         }
     }
 

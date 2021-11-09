@@ -18,6 +18,7 @@ public class ReportesGUI extends javax.swing.JFrame {
     public ReportesGUI(Principal principal) {
         initComponents();
         this.principal = principal;
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
@@ -45,9 +46,14 @@ public class ReportesGUI extends javax.swing.JFrame {
         rTokens = new javax.swing.JButton();
         rLexemas = new javax.swing.JButton();
         rAFD = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        analisisSintactico = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(0, 0, 0));
+        setResizable(false);
 
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setText(" ");
@@ -62,12 +68,17 @@ public class ReportesGUI extends javax.swing.JFrame {
         jLabel4.setText("     ");
         jPanel1.add(jLabel4, java.awt.BorderLayout.LINE_START);
 
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.setLayout(new java.awt.GridLayout(2, 0));
 
+        jLabel5.setFont(new java.awt.Font("Courier New", 1, 48)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("REPORTES");
         jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel2.add(jLabel5);
 
+        jPanel3.setBackground(new java.awt.Color(0, 0, 0));
         jPanel3.setLayout(new java.awt.BorderLayout());
 
         jLabel6.setText("   ");
@@ -76,8 +87,12 @@ public class ReportesGUI extends javax.swing.JFrame {
         jLabel7.setText("   ");
         jPanel3.add(jLabel7, java.awt.BorderLayout.PAGE_END);
 
-        jPanel4.setLayout(new java.awt.GridLayout(2, 2));
+        jPanel4.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel4.setLayout(new java.awt.GridLayout(2, 3));
 
+        rErrores.setBackground(new java.awt.Color(0, 0, 0));
+        rErrores.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        rErrores.setForeground(new java.awt.Color(255, 255, 255));
         rErrores.setText("REPORTE DE ERRORES");
         rErrores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,6 +101,9 @@ public class ReportesGUI extends javax.swing.JFrame {
         });
         jPanel4.add(rErrores);
 
+        rTokens.setBackground(new java.awt.Color(0, 0, 0));
+        rTokens.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        rTokens.setForeground(new java.awt.Color(255, 255, 255));
         rTokens.setText("REPORTE DE TOKENS");
         rTokens.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,6 +112,9 @@ public class ReportesGUI extends javax.swing.JFrame {
         });
         jPanel4.add(rTokens);
 
+        rLexemas.setBackground(new java.awt.Color(0, 0, 0));
+        rLexemas.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        rLexemas.setForeground(new java.awt.Color(255, 255, 255));
         rLexemas.setText("RECUENTO DE LEXEMAS");
         rLexemas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,6 +123,9 @@ public class ReportesGUI extends javax.swing.JFrame {
         });
         jPanel4.add(rLexemas);
 
+        rAFD.setBackground(new java.awt.Color(0, 0, 0));
+        rAFD.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        rAFD.setForeground(new java.awt.Color(255, 255, 255));
         rAFD.setText("AFD OPTIMO");
         rAFD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,6 +133,20 @@ public class ReportesGUI extends javax.swing.JFrame {
             }
         });
         jPanel4.add(rAFD);
+
+        jLabel8.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel4.add(jLabel8);
+
+        analisisSintactico.setBackground(new java.awt.Color(0, 0, 0));
+        analisisSintactico.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        analisisSintactico.setForeground(new java.awt.Color(255, 255, 255));
+        analisisSintactico.setText("ANALISIS SINTACTICO");
+        analisisSintactico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                analisisSintacticoActionPerformed(evt);
+            }
+        });
+        jPanel4.add(analisisSintactico);
 
         jPanel3.add(jPanel4, java.awt.BorderLayout.CENTER);
 
@@ -120,7 +158,7 @@ public class ReportesGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 424, Short.MAX_VALUE)
+            .addGap(0, 586, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -156,6 +194,10 @@ public class ReportesGUI extends javax.swing.JFrame {
         principal.reporteAFD();
     }//GEN-LAST:event_rAFDActionPerformed
 
+    private void analisisSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_analisisSintacticoActionPerformed
+        principal.analisisSintactico();
+    }//GEN-LAST:event_analisisSintacticoActionPerformed
+
     public JButton getrAFD() {
         return rAFD;
     }
@@ -173,6 +215,7 @@ public class ReportesGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton analisisSintactico;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -180,6 +223,7 @@ public class ReportesGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

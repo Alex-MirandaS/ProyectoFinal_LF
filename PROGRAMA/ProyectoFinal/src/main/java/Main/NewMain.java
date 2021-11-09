@@ -20,8 +20,7 @@ public class NewMain {
     public static void main(String[] args) {
 
         Principal principal = new Principal();
-        InicioGUI inicioGUI = new InicioGUI(principal);
-        inicioGUI.setVisible(true);
+        principal.inicio();
     }
 
 }

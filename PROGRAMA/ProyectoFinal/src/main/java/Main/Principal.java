@@ -7,8 +7,10 @@ package Main;
 import Archivos.EscritorArchivosTexto;
 import Archivos.LectorArchivosEnTexto;
 import Clases.AnalizadorL;
+import Clases.AnalizadorS;
 import Controladores.ControlPrincipalAL;
 import GUI.BusquedaGUI;
+import GUI.GuardarCambiosGUI;
 import GUI.PrincipalGUI;
 import GUI.ReportesGUI;
 
@@ -27,10 +29,12 @@ public class Principal {
     private PrincipalGUI principalGUI = new PrincipalGUI(this);
     private ReportesGUI reportesGUI = new ReportesGUI(this);
     private BusquedaGUI busquedaGUI;
+    private GuardarCambiosGUI guardarCambios = new GuardarCambiosGUI(this);
     //CLASES
     private LectorArchivosEnTexto lectorArchivos = new LectorArchivosEnTexto();
     private EscritorArchivosTexto escritorArchivos = new EscritorArchivosTexto();
-    private AnalizadorL analizador = new AnalizadorL();
+    private AnalizadorL analizadorL = new AnalizadorL();
+    private AnalizadorS analizadosS = new AnalizadorS();
     private ControlPrincipalAL controlPrincipal = new ControlPrincipalAL(this);
 
     public void inicio() {
@@ -38,9 +42,13 @@ public class Principal {
         principalGUI.setVisible(true);
     }
 
+    public void nuevoArchivo() {
+        controlPrincipal.nuevoArchivo();
+    }
+
     public void cargarArchivo() {
         controlPrincipal.seleccionarArchivo();
-        controlPrincipal.mostrarTextArea(principalGUI.getAreaTexto());
+
     }
 
     public void guardarArchivo() {
@@ -67,6 +75,10 @@ public class Principal {
         controlPrincipal.abrirReporteAFD();
     }
 
+    public void analisisSintactico() {
+        controlPrincipal.analisisSintactico();
+    }
+
     public void busquedaPatrones() {
         busquedaGUI = new BusquedaGUI(this);
         busquedaGUI.setVisible(true);
@@ -85,7 +97,7 @@ public class Principal {
     }
 
     public AnalizadorL getAnalizador() {
-        return analizador;
+        return analizadorL;
     }
 
     public ControlPrincipalAL getControlPrincipal() {
@@ -98,6 +110,10 @@ public class Principal {
 
     public BusquedaGUI getBusquedaGUI() {
         return busquedaGUI;
+    }
+
+    public GuardarCambiosGUI getGuardarCambios() {
+        return guardarCambios;
     }
 
 }
