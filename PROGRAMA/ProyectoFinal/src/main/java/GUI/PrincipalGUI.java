@@ -20,9 +20,9 @@ public class PrincipalGUI extends javax.swing.JFrame {
 
     public PrincipalGUI(Principal principal) {
         initComponents();
-        guardar.setEnabled(false);
-        reportes.setEnabled(false);
-        busqueda.setEnabled(false);
+//        guardar.setEnabled(false);
+//        reportes.setEnabled(false);
+//        busqueda.setEnabled(false);
         this.principal = principal;
     }
 
@@ -229,10 +229,10 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void abrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirActionPerformed
-        principal.cargarArchivo();
-        guardar.setEnabled(false);
-        reportes.setEnabled(true);
-        busqueda.setEnabled(true);
+//        principal.cargarArchivo();
+//        guardar.setEnabled(false);
+//        reportes.setEnabled(true);
+//        busqueda.setEnabled(true);
     }//GEN-LAST:event_abrirActionPerformed
 
     private void reportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesActionPerformed
@@ -244,11 +244,11 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_busquedaActionPerformed
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
-        principal.guardarArchivo();
-        guardar.setEnabled(false);
-        reportes.setEnabled(false);
-        busqueda.setEnabled(false);
-        abrir.setEnabled(true);
+//        principal.guardarArchivo();
+//        guardar.setEnabled(false);
+//        reportes.setEnabled(false);
+//        busqueda.setEnabled(false);
+//        abrir.setEnabled(true);
     }//GEN-LAST:event_guardarActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
@@ -260,10 +260,10 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarComoActionPerformed
 
     private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
-        principal.nuevoArchivo();
-        reportes.setEnabled(false);
-        busqueda.setEnabled(false);
-        guardar.setEnabled(false);
+//        principal.nuevoArchivo();
+//        reportes.setEnabled(false);
+//        busqueda.setEnabled(false);
+//        guardar.setEnabled(false);
     }//GEN-LAST:event_nuevoActionPerformed
 
     private void nuevoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoMousePressed

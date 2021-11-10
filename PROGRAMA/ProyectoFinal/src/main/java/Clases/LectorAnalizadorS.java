@@ -35,7 +35,7 @@ public class LectorAnalizadorS {
                 tokensLista.add(tokens.get(contador));
                 automataPila(contador, tokens);
 
-                if (pilaVacía() || ultimoValorPila() == "ERROR") {
+                if (pilaVacía() || ultimoValorPila().equals("ERROR")) {
                     break;
                 }
             }
@@ -46,6 +46,8 @@ public class LectorAnalizadorS {
                 agregarNuevaGramatica(lista, TipoGramatica.ERROR);
             }
         } else {
+            contador += indice;
+            tokensLista.add(tokens.get(contador));
             agregarNuevaGramatica(lista, TipoGramatica.ERROR);
         }
 
@@ -99,10 +101,10 @@ public class LectorAnalizadorS {
                                     boolean xd = verificarTablaAnalisis(indice, "$", tokens);
                                     if (pila.size() > 2) {
                                         return true;
-                                    }else{
+                                    } else {
                                         return xd;
                                     }
-                                    
+
                                 }
                             }
 
@@ -133,7 +135,7 @@ public class LectorAnalizadorS {
 
         if (actual.getTipo() == TipoToken.EXTRAS || actual.getTipo() == TipoToken.PALABRAR) {
             return actual.getValor();
-        }else{
+        } else {
             return "";
         }
     }
@@ -253,6 +255,7 @@ public class LectorAnalizadorS {
 //Es el encargado de reiniciar el lector, segun el tipo de gramatica nueva que se evaluara
     private void reiniciarLector(TipoGramatica tipo) {
         definirTablaAnalisis(tipo);
+        pila.removeAllElements();
         tokensLista = new ArrayList<>();
         pila.add("$");
         pila.add(produccionInicial);

@@ -333,7 +333,9 @@ public class ControlPrincipalAL {
             modelo.addColumn("LEXEMA");
             modelo.addColumn("FILA");
             modelo.addColumn("COLUMNA");
+
             for (int i = 0; i < gramaticas.size(); i++) {
+
                 if (gramaticas.get(i).getTipo().equals(TipoGramatica.ERROR)) {
                     modelo.addRow(new Object[]{gramaticas.get(i).getTipo().getNombre(),
                         unirValoresGramatica(gramaticas.get(i).getTokensGramatica()),
