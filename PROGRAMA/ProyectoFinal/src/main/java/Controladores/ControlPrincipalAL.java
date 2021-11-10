@@ -41,6 +41,8 @@ public class ControlPrincipalAL {
     private ArrayList<String> filasArchivo = new ArrayList<>();
     private ArrayList<Token> tokens = new ArrayList<>();
     private String pathDocumentoActual;
+    private boolean conservarTexto = true;
+    private boolean esperar = true;
 
     public ControlPrincipalAL(Principal principal) {
         this.principal = principal;
@@ -55,27 +57,37 @@ public class ControlPrincipalAL {
     }
 
     public void guardarCambios(boolean eleccion) {
-        if (eleccion) {
-            guardarArchivo(principal.getPrincipalGUI().getAreaTexto().getText());
-        }
-        pathDocumentoActual = "";
-        principal.getPrincipalGUI().getAreaTexto().setText("");
-
+        conservarTexto = eleccion;
     }
 
     private void verificarCambiosArchivo() {
         if (!areaTextoVacía()) {
             principal.getGuardarCambios().setVisible(true);
+
         }
     }
 
     public void nuevoArchivo() {
         verificarCambiosArchivo();
+        if (conservarTexto) {
+            guardarArchivo(principal.getPrincipalGUI().getAreaTexto().getText());
+            pathDocumentoActual = "";
+            principal.getPrincipalGUI().getAreaTexto().setText("");
+        }
     }
 
 //Se encarga de seleecionar el archivo y realizar el proceso correspondiente de extraccion de texto del mismo.
     public ArrayList<String> seleccionarArchivo() {
         verificarCambiosArchivo();
+
+//        if (conservarTexto) {
+//            if (!pathDocumentoActual.equals("")) {
+//                guardarArchivo(principal.getPrincipalGUI().getAreaTexto().getText());
+//            } else {
+//                guardarArchivoComo();
+//            }
+//
+//        }
         JFileChooser fileChosser = new JFileChooser();
         int seleccion = fileChosser.showOpenDialog(principal.getPrincipalGUI());
 
@@ -84,12 +96,14 @@ public class ControlPrincipalAL {
             File fichero = fileChosser.getSelectedFile();
             try {
                 filasArchivo = principal.getLectorArchivos().leerFichero(fichero);
+                principal.getPrincipalGUI().getAreaTexto().setText("");
                 mostrarTextArea(principal.getPrincipalGUI().getAreaTexto());
                 pathDocumentoActual = fichero.getAbsolutePath();
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(null, "Error al leer el archivo");
             }
         }
+
         return filasArchivo;
     }
 //Se encarga de guardar un archivo y reiniciar el area de texto, para volver a abrir el archivo
@@ -99,7 +113,6 @@ public class ControlPrincipalAL {
         try {
             principal.getEscritorArchivos().guardarArchivoTexto(texto);
             JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, BUSQUELO EN LA CARPETA: archivos");
-            principal.getPrincipalGUI().getAreaTexto().setText("");
         } catch (IOException ex) {
             Logger.getLogger(ControlPrincipalAL.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -132,7 +145,22 @@ public class ControlPrincipalAL {
 //Se encarga de verificar todas las palabras que estan incluidas en las filas del archivo de texto cargado
 
     public void verificarTokens() {
-        tokens = principal.getAnalizadorL().evaluarTextoTotal(filasArchivo);
+        tokens = principal.getAnalizadorL().evaluarTextoTotal(obtenerFila(principal.getPrincipalGUI().getAreaTexto()));
+    }
+
+    private ArrayList<String> obtenerFila(JTextArea areaTexto) {
+       ArrayList<String> temp = new ArrayList<>();
+       String textoTemp = "";
+       String textoTotal = areaTexto.getText();
+        for (int i = 0; i < textoTotal.length(); i++) {
+            if (textoTotal.charAt(i) != '\n') {
+                textoTemp += textoTotal.charAt(i);
+            }else if (textoTemp.length() != 0) {
+                temp.add(textoTemp);
+                textoTemp = "";
+            }
+        }
+       return temp;
     }
 //Se encarga de mostrar los reportes, si existe algun error o si el archivo esta libre de errores
 

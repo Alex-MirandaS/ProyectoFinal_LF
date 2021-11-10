@@ -36,6 +36,8 @@ public class Principal {
     private AnalizadorL analizadorL = new AnalizadorL();
     private AnalizadorS analizadorS = new AnalizadorS();
     private ControlPrincipalAL controlPrincipal = new ControlPrincipalAL(this);
+    //Valores
+    private String datosCreador = "Creador: William Alexander Miranda Santos \nNickname: Mordo777 \nCarnet: 201930967";
 
     public void inicio() {
         principalGUI.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -99,7 +101,7 @@ public class Principal {
     public AnalizadorL getAnalizadorL() {
         return analizadorL;
     }
-    
+
     public AnalizadorS getAnalizadorS() {
         return analizadorS;
     }
@@ -118,6 +120,10 @@ public class Principal {
 
     public GuardarCambiosGUI getGuardarCambios() {
         return guardarCambios;
+    }
+
+    public String getDatosCreador() {
+        return datosCreador;
     }
 
 }

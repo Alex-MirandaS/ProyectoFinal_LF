@@ -104,7 +104,7 @@ public class GuardarCambiosGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_cancelarActionPerformed

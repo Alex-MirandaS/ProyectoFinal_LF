@@ -8,6 +8,7 @@ package GUI;
 import Main.Principal;
 import java.awt.Color;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
@@ -39,6 +40,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
         guardar = new javax.swing.JButton();
         guardarComo = new javax.swing.JButton();
         salir = new javax.swing.JButton();
+        acercaDe = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         atras = new javax.swing.JButton();
         adelante = new javax.swing.JButton();
@@ -54,7 +56,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
         setBackground(new java.awt.Color(0, 0, 0));
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
-        jPanel1.setLayout(new java.awt.GridLayout(8, 1));
+        jPanel1.setLayout(new java.awt.GridLayout(9, 1));
 
         nuevo.setBackground(new java.awt.Color(0, 0, 0));
         nuevo.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
@@ -174,6 +176,22 @@ public class PrincipalGUI extends javax.swing.JFrame {
         });
         jPanel1.add(salir);
 
+        acercaDe.setBackground(new java.awt.Color(0, 0, 0));
+        acercaDe.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        acercaDe.setForeground(new java.awt.Color(255, 255, 255));
+        acercaDe.setText("ACERCA DE");
+        acercaDe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                acercaDeMousePressed(evt);
+            }
+        });
+        acercaDe.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                acercaDeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(acercaDe);
+
         jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.setLayout(new java.awt.GridLayout(1, 2));
 
@@ -220,7 +238,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.GridLayout(1, 1));
 
         jLabel4.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        jLabel4.setText("XD");
+        jLabel4.setText("   ");
         jPanel3.add(jLabel4);
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.PAGE_END);
@@ -229,7 +247,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void abrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirActionPerformed
-//        principal.cargarArchivo();
+        principal.cargarArchivo();
 //        guardar.setEnabled(false);
 //        reportes.setEnabled(true);
 //        busqueda.setEnabled(true);
@@ -244,7 +262,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_busquedaActionPerformed
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
-//        principal.guardarArchivo();
+        principal.guardarArchivo();
 //        guardar.setEnabled(false);
 //        reportes.setEnabled(false);
 //        busqueda.setEnabled(false);
@@ -252,7 +270,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarActionPerformed
 
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
-        // TODO add your handling code here:
+       System.exit(0);
     }//GEN-LAST:event_salirActionPerformed
 
     private void guardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarComoActionPerformed
@@ -260,7 +278,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_guardarComoActionPerformed
 
     private void nuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoActionPerformed
-//        principal.nuevoArchivo();
+        principal.nuevoArchivo();
 //        reportes.setEnabled(false);
 //        busqueda.setEnabled(false);
 //        guardar.setEnabled(false);
@@ -283,7 +301,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_busquedaMousePressed
 
     private void guardarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarMousePressed
-     
+
     }//GEN-LAST:event_guardarMousePressed
 
     private void guardarComoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_guardarComoMousePressed
@@ -307,12 +325,20 @@ public class PrincipalGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_atrasActionPerformed
 
     private void nuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoMouseClicked
-        
+
     }//GEN-LAST:event_nuevoMouseClicked
 
     private void nuevoMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoMouseReleased
 
     }//GEN-LAST:event_nuevoMouseReleased
+
+    private void acercaDeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_acercaDeMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_acercaDeMousePressed
+
+    private void acercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_acercaDeActionPerformed
+        JOptionPane.showMessageDialog(null, principal.getDatosCreador());
+    }//GEN-LAST:event_acercaDeActionPerformed
 
     public JTextArea getAreaTexto() {
         return areaTexto;
@@ -321,6 +347,7 @@ public class PrincipalGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton abrir;
+    private javax.swing.JButton acercaDe;
     private javax.swing.JButton adelante;
     private javax.swing.JTextArea areaTexto;
     private javax.swing.JButton atras;
