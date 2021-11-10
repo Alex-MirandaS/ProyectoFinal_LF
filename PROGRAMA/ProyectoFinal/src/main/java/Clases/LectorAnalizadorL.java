@@ -60,7 +60,7 @@ public class LectorAnalizadorL {
             String primeraPosicion = funcionDeTransicion[j][0];
             String valor = funcionDeTransicion[j][1];
             String siguiente = funcionDeTransicion[j][2];
-            if (estadoActual != "ERROR" && tipoToken != 'E') {
+            if (estadoActual != "ERROR" && tipoToken != 'Ɛ') {
                 if (primeraPosicion.equalsIgnoreCase(estadoActual) && valor.equals(String.valueOf(tipoToken))) {
                     añadirMovimientoRegistro(siguiente, actual);
                     estadoActual = siguiente;
@@ -89,7 +89,7 @@ public class LectorAnalizadorL {
                     return '0';
                 } else if (String.valueOf(actual).equalsIgnoreCase("-")) {
                     return '-';
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoNumero)) {
                     return 'D';
                 }
                 break;
@@ -98,9 +98,9 @@ public class LectorAnalizadorL {
                     return '_';
                 } else if (String.valueOf(actual).equalsIgnoreCase("-")) {
                     return '-';
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoNumero)) {
                     return 'D';
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoLetras)) {
                     return 'L';
                 }
                 break;
@@ -113,41 +113,41 @@ public class LectorAnalizadorL {
                 } else if (String.valueOf(actual).equalsIgnoreCase("”")) {
                     return '”';
 
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoLetras)) {
                     return 'L';
 
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoCaracteres)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoNumero)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoCaracteres)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosAgrupacion)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoNumero)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosOperacion)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosPuntuacion)) {
                     return 'C';
                 }
                 break;
             case COMENTARIO:
                 if (String.valueOf(actual).equalsIgnoreCase("/")) {
                     return '/';
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoLetras)) {
                     return 'L';
-                } else if (evaluarCHAR(actual, InformaciónTokens.alfabetoCaracteres)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosAgrupacion)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosOperacion)
-                        || evaluarCHAR(actual, InformaciónTokens.alfabetoSignosPuntuacion)) {
+                } else if (evaluarCHAR(actual, InformacionTokens.alfabetoCaracteres)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosAgrupacion)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosOperacion)
+                        || evaluarCHAR(actual, InformacionTokens.alfabetoSignosPuntuacion)) {
                     return 'C';
                 }
                 break;
             case PALABRAR:
-                if (evaluarCHAR(actual, InformaciónTokens.alfabetoLetras)) {
+                if (evaluarCHAR(actual, InformacionTokens.alfabetoLetras)) {
                     return actual;
                 }
                 break;
             case EXTRAS:
-                if (evaluarCHAR(actual, InformaciónTokens.inicialesExtras[0])) {
+                if (evaluarCHAR(actual, InformacionTokens.inicialesExtras[0])) {
                     return actual;
                 }
                 break;
         }
-        return 'E';
+        return 'Ɛ';
     }
 
     /*Se encarga de otorgarle los valores al lector, tanto los estados de aceptación y la funcion de transicion
@@ -155,28 +155,28 @@ public class LectorAnalizadorL {
     private void definirEstadosYFuncion(TipoToken tipo) {
         switch (tipo) {
             case IDENTIFICADOR:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionIdentificador;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionIdentificador;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionIdentificador;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionIdentificador;
                 break;
             case NUMERO:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionNumero;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionNumero;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionNumero;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionNumero;
                 break;
             case LITERAL:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionLiteral;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionLiteral;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionLiteral;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionLiteral;
                 break;
             case COMENTARIO:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionComentario;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionComentario;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionComentario;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionComentario;
                 break;
             case PALABRAR:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionPR;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionPR;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionPR;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionPR;
                 break;
             case EXTRAS:
-                this.estadosAceptacion = InformaciónTokens.estadosAceptacionExtras;
-                this.funcionDeTransicion = InformaciónTokens.funcionTransicionExtras;
+                this.estadosAceptacion = InformacionTokens.estadosAceptacionExtras;
+                this.funcionDeTransicion = InformacionTokens.funcionTransicionExtras;
                 break;
         }
 

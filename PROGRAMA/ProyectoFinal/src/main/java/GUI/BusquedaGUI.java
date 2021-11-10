@@ -43,10 +43,11 @@ public class BusquedaGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setBackground(new java.awt.Color(0, 0, 51));
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setText(" ");
         getContentPane().add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 51));
@@ -69,6 +70,7 @@ public class BusquedaGUI extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(0, 0, 51));
         jPanel5.setLayout(new java.awt.GridLayout(1, 2));
 
+        buscar.setBackground(new java.awt.Color(0, 0, 0));
         buscar.setText("BUSCAR");
         buscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -77,6 +79,7 @@ public class BusquedaGUI extends javax.swing.JFrame {
         });
         jPanel5.add(buscar);
 
+        salir.setBackground(new java.awt.Color(0, 0, 0));
         salir.setText("SALIR");
         salir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,12 +89,15 @@ public class BusquedaGUI extends javax.swing.JFrame {
         jPanel5.add(salir);
 
         jPanel4.add(jPanel5, java.awt.BorderLayout.LINE_END);
+
+        barraBusqueda.setBackground(new java.awt.Color(102, 102, 102));
         jPanel4.add(barraBusqueda, java.awt.BorderLayout.CENTER);
 
         jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
+        areaTexto.setBackground(new java.awt.Color(102, 102, 102));
         areaTexto.setColumns(20);
         areaTexto.setRows(5);
         jScrollPane1.setViewportView(areaTexto);

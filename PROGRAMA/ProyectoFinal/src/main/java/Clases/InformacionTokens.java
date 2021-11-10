@@ -8,7 +8,7 @@ package Clases;
  *
  * @author Alex
  */
-public class InformaciónTokens {
+public class InformacionTokens {
 
     /*DATOS DE LOS TOKENS
     Se incluyen los alfabetos, estados de aceptación y función de transición correspondiente a cada uno de los tipos de token disponibles

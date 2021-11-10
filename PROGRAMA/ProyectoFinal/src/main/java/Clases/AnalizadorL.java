@@ -72,17 +72,17 @@ public class AnalizadorL {
     private void verificarTipoToken(Texto texto, ArrayList<Token> lista) {
         char caracterInicial = texto.getValor().charAt(0);
         TipoToken tipo = null;
-        if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesPalabraR)) {
+        if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesPalabraR)) {
             tipo = TipoToken.PALABRAR;
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesIdentificador)) {
+        } else if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesIdentificador)) {
             tipo = TipoToken.IDENTIFICADOR;
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesNumero)) {
+        } else if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesNumero)) {
             tipo = TipoToken.NUMERO;
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesLiteral)) {
+        } else if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesLiteral)) {
             tipo = TipoToken.LITERAL;
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesComentario)) {//&& evaluarCHAR(texto.getValor().charAt(1), InformaciónTokens.inicialesComentario)
+        } else if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesComentario)) {//&& evaluarCHAR(texto.getValor().charAt(1), InformaciónTokens.inicialesComentario)
             tipo = TipoToken.COMENTARIO;
-        } else if (evaluarCHAR(caracterInicial, InformaciónTokens.inicialesExtras)) {
+        } else if (evaluarCHAR(caracterInicial, InformacionTokens.inicialesExtras)) {
             tipo = TipoToken.EXTRAS;
         } else {
             tipo = TipoToken.ERROR;

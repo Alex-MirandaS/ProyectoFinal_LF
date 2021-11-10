@@ -17,6 +17,7 @@ public class TablaResultados extends javax.swing.JFrame {
 
     public TablaResultados() {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
@@ -38,18 +39,28 @@ public class TablaResultados extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("RESULTADOS");
 
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("          ");
         getContentPane().add(jLabel1, java.awt.BorderLayout.LINE_END);
 
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("          ");
         getContentPane().add(jLabel2, java.awt.BorderLayout.LINE_START);
 
+        jLabel3.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("   ");
         getContentPane().add(jLabel3, java.awt.BorderLayout.PAGE_END);
 
+        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("  ");
         getContentPane().add(jLabel4, java.awt.BorderLayout.PAGE_START);
 
+        tabla.setBackground(new java.awt.Color(0, 0, 0));
+        tabla.setForeground(new java.awt.Color(255, 255, 255));
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
