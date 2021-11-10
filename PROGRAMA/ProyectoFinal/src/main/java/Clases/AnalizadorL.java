@@ -41,11 +41,12 @@ public class AnalizadorL {
     las cuales son determinadas por un salto de linea o un espacio*/
     public ArrayList<Texto> separar(String textoFila, int fila) {
         ArrayList<Texto> temporal = new ArrayList<>();
+        char temporalChar;
         String textoTemp = "";
         int i;
         for (i = 0; i < textoFila.length(); i++) {
-
-            if (textoFila.charAt(i) != ' ') {
+            temporalChar = textoFila.charAt(i);
+            if (textoFila.charAt(i) != '\t' && textoFila.charAt(i) != ' ') {
                 textoTemp += textoFila.charAt(i);
             } else if (textoFila.charAt(i) == ' ' && textoTemp.length() != 0) {
                 temporal.add(new Texto(textoTemp, fila, i));
@@ -123,18 +124,18 @@ public class AnalizadorL {
                 nuevoTexto += caracteres[i];
             }
         } else {
-            for (int i = 0; i < texto.getValor().length()-cCaracteres; i++) {
+            for (int i = 0; i < texto.getValor().length() - cCaracteres; i++) {
                 nuevoTexto += caracteres[i];
             }
         }
-    
-    textoTemp  = new Texto(nuevoTexto, texto.getFila(), texto.getColumna());
-    return textoTemp ;
-}
 
-/*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
+        textoTemp = new Texto(nuevoTexto, texto.getFila(), texto.getColumna());
+        return textoTemp;
+    }
+
+    /*Es el encargado de verficicar si es necesario seguir leyendo un texto en espeficico, solamente si el mismo contiene 
   residuos de texto  */
-private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista) {
+    private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista) {
         if (cCaracteres != texto.getValor().length()) {
             verificarTipoToken(redimensionarTexto(texto, cCaracteres, true), lista);
         }
@@ -182,51 +183,51 @@ private void darSeguimiento(int cCaracteres, Texto texto, ArrayList<Token> lista
                         }
                         break;
                     case EXTRAS:
-                        
+
                         if (temporal.get(i).getValor().charAt(0) == '(') {
                             for (int k = 0; k < temporal.get(i).getValor().length(); k++) {
                                 if (temporal.get(i).getValor().charAt(k) != '(') {
                                     valorTemp += temporal.get(i).getValor().charAt(k);
-                                }else{
+                                } else {
                                     textos.add(new Texto(String.valueOf(temporal.get(i).getValor().charAt(k)), temporal.get(i).getFila(), temporal.get(i).getColumna() - (temporal.get(i).getValor().length() - (k + 1))));
-                                    }
+                                }
                             }
-                        }else if (temporal.get(i).getValor().charAt(temporal.get(i).getValor().length()-1) == ')') {
+                        } else if (temporal.get(i).getValor().charAt(temporal.get(i).getValor().length() - 1) == ')') {
                             for (int k = 0; k < temporal.get(i).getValor().length(); k++) {
                                 if (temporal.get(i).getValor().charAt(k) != ')') {
                                     valorTemp += temporal.get(i).getValor().charAt(k);
-                                }else{
+                                } else {
                                     if (valorTemp.length() != 0) {
                                         textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
                                         valorTemp = "";
-                                        
+
                                     }
-                       
+
                                     textos.add(new Texto(String.valueOf(temporal.get(i).getValor().charAt(k)), temporal.get(i).getFila(), temporal.get(i).getColumna() - (temporal.get(i).getValor().length() - (k + 1))));
                                 }
                             }
                         }
-                        tipoTemp = null;        
+                        tipoTemp = null;
                         break;
-            
+
                     default:
                         textos.add(temporal.get(i));
                         tipoTemp = null;
                         break;
                 }
             }
-                                    
+
             if (valorTemp.length() != 0 && tipoTemp != TipoToken.LITERAL) {
-            textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
-            valorTemp = "";
-            tipoTemp = null;
+                textos.add(new Texto(valorTemp, temporal.get(i).getFila(), temporal.get(i).getColumna()));
+                valorTemp = "";
+                tipoTemp = null;
+            }
+
         }
-
+        return textos;
     }
-    return textos ;
-}
 
-public LectorAnalizadorL getLector() {
+    public LectorAnalizadorL getLector() {
         return lector;
     }
 

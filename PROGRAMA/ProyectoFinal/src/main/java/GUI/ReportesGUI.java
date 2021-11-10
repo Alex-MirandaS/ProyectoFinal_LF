@@ -214,6 +214,10 @@ public class ReportesGUI extends javax.swing.JFrame {
         return rTokens;
     }
 
+    public JButton getAnalisisSintactico() {
+        return analisisSintactico;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton analisisSintactico;
     private javax.swing.JLabel jLabel1;

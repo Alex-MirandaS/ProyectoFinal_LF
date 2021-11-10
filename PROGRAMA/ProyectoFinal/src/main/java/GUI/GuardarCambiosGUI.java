@@ -39,12 +39,16 @@ public class GuardarCambiosGUI extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(400, 150));
         setResizable(false);
 
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jLabel1.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("¿Desea guardar los cambios realizados?");
         jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
 
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jLabel3.setText("     ");
@@ -56,8 +60,12 @@ public class GuardarCambiosGUI extends javax.swing.JFrame {
         jLabel2.setText(" ");
         jPanel2.add(jLabel2, java.awt.BorderLayout.PAGE_END);
 
+        jPanel3.setBackground(new java.awt.Color(0, 0, 0));
         jPanel3.setLayout(new java.awt.GridLayout(1, 3));
 
+        guardar.setBackground(new java.awt.Color(0, 0, 0));
+        guardar.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        guardar.setForeground(new java.awt.Color(255, 255, 255));
         guardar.setText("GUARDAR");
         guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,6 +74,9 @@ public class GuardarCambiosGUI extends javax.swing.JFrame {
         });
         jPanel3.add(guardar);
 
+        noGuardar.setBackground(new java.awt.Color(0, 0, 0));
+        noGuardar.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        noGuardar.setForeground(new java.awt.Color(255, 255, 255));
         noGuardar.setText("NO GUARDAR");
         noGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -74,6 +85,9 @@ public class GuardarCambiosGUI extends javax.swing.JFrame {
         });
         jPanel3.add(noGuardar);
 
+        cancelar.setBackground(new java.awt.Color(0, 0, 0));
+        cancelar.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        cancelar.setForeground(new java.awt.Color(255, 255, 255));
         cancelar.setText("CANCELAR");
         cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

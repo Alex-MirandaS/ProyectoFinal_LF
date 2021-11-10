@@ -63,6 +63,7 @@ public class LectorAnalizadorS {
     private boolean verificarTablaAnalisis(int indice, String valorOp, ArrayList<Token> tokens) {
         boolean estadoError = false;
         String valor;
+        int j;
         if (valorOp.equals("")) {
             valor = obtenerTipoToken(tokens.get(indice));
         } else {
@@ -70,13 +71,13 @@ public class LectorAnalizadorS {
         }
 
         String ultimaProduccion = ultimoValorPila();
-        for (int j = 0; j < tablaAnalisis.length; j++) {
+        for (j = 0; j < tablaAnalisis.length; j++) {
 
             String produccionInicial = tablaAnalisis[j][0];
             String valorTabla = tablaAnalisis[j][1];
             String siguienteProduccion = tablaAnalisis[j][2];
 
-            if (ultimaProduccion != "ERROR") {
+            if (!ultimaProduccion.equals("ERROR")) {
                 if (produccionInicial.equals(ultimaProduccion) && valor.equals(valorTabla)) {
                     if (valor.equals(siguienteProduccion)) {
                         pop();
@@ -116,13 +117,13 @@ public class LectorAnalizadorS {
                     return true;
                 }
             } else {
-                estadoError = true;
-                break;
+                return true;
             }
         }
 
-        if (estadoError != false) {
+        if (j == tablaAnalisis.length) {
             shift("ERROR");
+            return true;
         }
 
         return false;

@@ -34,7 +34,7 @@ public class Principal {
     private LectorArchivosEnTexto lectorArchivos = new LectorArchivosEnTexto();
     private EscritorArchivosTexto escritorArchivos = new EscritorArchivosTexto();
     private AnalizadorL analizadorL = new AnalizadorL();
-    private AnalizadorS analizadosS = new AnalizadorS();
+    private AnalizadorS analizadorS = new AnalizadorS();
     private ControlPrincipalAL controlPrincipal = new ControlPrincipalAL(this);
 
     public void inicio() {
@@ -52,7 +52,7 @@ public class Principal {
     }
 
     public void guardarArchivo() {
-        controlPrincipal.guardarArchivo();
+        controlPrincipal.guardarArchivo(principalGUI.getAreaTexto().getText());
     }
 
     public void reportes() {
@@ -96,8 +96,12 @@ public class Principal {
         return escritorArchivos;
     }
 
-    public AnalizadorL getAnalizador() {
+    public AnalizadorL getAnalizadorL() {
         return analizadorL;
+    }
+    
+    public AnalizadorS getAnalizadorS() {
+        return analizadorS;
     }
 
     public ControlPrincipalAL getControlPrincipal() {

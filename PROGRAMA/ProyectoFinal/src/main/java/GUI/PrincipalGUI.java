@@ -20,7 +20,6 @@ public class PrincipalGUI extends javax.swing.JFrame {
 
     public PrincipalGUI(Principal principal) {
         initComponents();
-        areaTexto.setEditable(false);
         guardar.setEnabled(false);
         reportes.setEnabled(false);
         busqueda.setEnabled(false);
@@ -246,7 +245,6 @@ public class PrincipalGUI extends javax.swing.JFrame {
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
         principal.guardarArchivo();
-        areaTexto.setEditable(false);
         guardar.setEnabled(false);
         reportes.setEnabled(false);
         busqueda.setEnabled(false);

@@ -5,6 +5,7 @@
 package Controladores;
 
 import Clases.AnalizadorS;
+import Enums.TipoGramatica;
 import Enums.TipoToken;
 import GUI.PrincipalGUI;
 import GUI.TablaResultados;
@@ -55,7 +56,7 @@ public class ControlPrincipalAL {
 
     public void guardarCambios(boolean eleccion) {
         if (eleccion) {
-            guardarArchivo();
+            guardarArchivo(principal.getPrincipalGUI().getAreaTexto().getText());
         }
         pathDocumentoActual = "";
         principal.getPrincipalGUI().getAreaTexto().setText("");
@@ -93,11 +94,11 @@ public class ControlPrincipalAL {
     }
 //Se encarga de guardar un archivo y reiniciar el area de texto, para volver a abrir el archivo
 
-    public void guardarArchivo() {
-
+    public void guardarArchivo(String texto) {
+//principal.getPrincipalGUI().getAreaTexto().getText()
         try {
-            principal.getEscritorArchivos().guardarArchivoTexto(principal.getPrincipalGUI().getAreaTexto().getText());
-            JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, SE NECESITA VOLVER A ABRIRLO");
+            principal.getEscritorArchivos().guardarArchivoTexto(texto);
+            JOptionPane.showMessageDialog(null, "ARCHIVO GUARDADO, BUSQUELO EN LA CARPETA: archivos");
             principal.getPrincipalGUI().getAreaTexto().setText("");
         } catch (IOException ex) {
             Logger.getLogger(ControlPrincipalAL.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,7 +132,7 @@ public class ControlPrincipalAL {
 //Se encarga de verificar todas las palabras que estan incluidas en las filas del archivo de texto cargado
 
     public void verificarTokens() {
-        tokens = principal.getAnalizador().evaluarTextoTotal(filasArchivo);
+        tokens = principal.getAnalizadorL().evaluarTextoTotal(filasArchivo);
     }
 //Se encarga de mostrar los reportes, si existe algun error o si el archivo esta libre de errores
 
@@ -142,11 +143,13 @@ public class ControlPrincipalAL {
                 principal.getReportesGUI().getrErrores().setEnabled(true);
                 principal.getReportesGUI().getrLexemas().setEnabled(false);
                 principal.getReportesGUI().getrTokens().setEnabled(false);
+                principal.getReportesGUI().getAnalisisSintactico().setEnabled(false);
                 break;
             }
             principal.getReportesGUI().getrErrores().setEnabled(false);
             principal.getReportesGUI().getrLexemas().setEnabled(true);
             principal.getReportesGUI().getrTokens().setEnabled(true);
+            principal.getReportesGUI().getAnalisisSintactico().setEnabled(true);
         }
         principal.getReportesGUI().setVisible(true);
     }
@@ -249,10 +252,10 @@ public class ControlPrincipalAL {
         DefaultTableModel modelo = new DefaultTableModel();
         tabla.getTabla().setModel(modelo);
         modelo.addColumn("REPORTE AFD OPTIMO");
-        for (int i = 0; i < principal.getAnalizador().getLector().getMovimientosTotales().size(); i++) {
-            modelo.addRow(new Object[]{principal.getAnalizador().getLector().getMovimientosTotales().get(i).get(0)});
-            for (int j = 1; j < principal.getAnalizador().getLector().getMovimientosTotales().get(i).size(); j++) {
-                modelo.addRow(new Object[]{"        " + principal.getAnalizador().getLector().getMovimientosTotales().get(i).get(j)});
+        for (int i = 0; i < principal.getAnalizadorL().getLector().getMovimientosTotales().size(); i++) {
+            modelo.addRow(new Object[]{principal.getAnalizadorL().getLector().getMovimientosTotales().get(i).get(0)});
+            for (int j = 1; j < principal.getAnalizadorL().getLector().getMovimientosTotales().get(i).size(); j++) {
+                modelo.addRow(new Object[]{"        " + principal.getAnalizadorL().getLector().getMovimientosTotales().get(i).get(j)});
             }
             tabla.setVisible(true);
         }
@@ -302,18 +305,137 @@ public class ControlPrincipalAL {
     }
 
     public void analisisSintactico() {
-        AnalizadorS analizadorS = new AnalizadorS();
-        ArrayList<Gramatica> gramaticas = analizadorS.evaluarTokensTotales(tokens);
+        boolean estadoError = false;
+        principal.getAnalizadorS().evaluarTokensTotales(tokens);
+        ArrayList<Gramatica> gramaticas = principal.getAnalizadorS().evaluarTokensTotales(tokens);
 
         for (int i = 0; i < gramaticas.size(); i++) {
-            System.out.println(gramaticas.get(i).getTipo().getNombre());
-            for (int j = 0; j < gramaticas.get(i).getTokensGramatica().size(); j++) {
 
-                System.out.println(gramaticas.get(i).getTokensGramatica().get(j).getValor());
+            if (gramaticas.get(i).getTipo().equals(TipoGramatica.ERROR)) {
+                estadoError = true;
+                break;
             }
-            System.out.println("SI FUNCIONA WEY :D");
-            System.out.println("");
+
+//            System.out.println(gramaticas.get(i).getTipo().getNombre());
+//            for (int j = 0; j < gramaticas.get(i).getTokensGramatica().size(); j++) {
+//
+//                System.out.println(gramaticas.get(i).getTokensGramatica().get(j).getValor());
+//            }
+//            System.out.println("SI FUNCIONA WEY :D");
+//            System.out.println("");
         }
+
+        if (estadoError) {
+            TablaResultados tabla = new TablaResultados();
+            DefaultTableModel modelo = new DefaultTableModel();
+            tabla.getTabla().setModel(modelo);
+            modelo.addColumn("TIPO GRAMATICA");
+            modelo.addColumn("LEXEMA");
+            modelo.addColumn("FILA");
+            modelo.addColumn("COLUMNA");
+            for (int i = 0; i < gramaticas.size(); i++) {
+                if (gramaticas.get(i).getTipo().equals(TipoGramatica.ERROR)) {
+                    modelo.addRow(new Object[]{gramaticas.get(i).getTipo().getNombre(),
+                        unirValoresGramatica(gramaticas.get(i).getTokensGramatica()),
+                        gramaticas.get(i).getTokensGramatica().get(gramaticas.get(i).getTokensGramatica().size() - 1).getFila(),
+                        gramaticas.get(i).getTokensGramatica().get(gramaticas.get(i).getTokensGramatica().size() - 1).getColumna()});
+                }
+            }
+            tabla.setVisible(true);
+        } else {
+            ArrayList<String> temp = modificarGramatica(gramaticas);
+            String valorEscribir = "";
+            for (int i = 0; i < temp.size(); i++) {
+                valorEscribir += temp.get(i) + "\n";
+            }
+            guardarArchivo(valorEscribir);
+        }
+
+    }
+
+    private String unirValoresGramatica(ArrayList<Token> lista) {
+        String valor = "";
+        for (int i = 0; i < lista.size(); i++) {
+            valor += lista.get(i).getValor() + " ";
+        }
+        return valor;
+    }
+
+    private ArrayList<String> modificarGramatica(ArrayList<Gramatica> gramaticas) {
+        ArrayList<String> temp = new ArrayList<>();
+
+        for (int i = 0; i < gramaticas.size(); i++) {
+            if (!gramaticas.get(i).getTipo().equals(TipoGramatica.ERROR)) {
+                temp.add(verificarGramatica("", gramaticas.get(i)));
+            }
+        }
+
+        return temp;
+    }
+
+    private String verificarGramatica(String dato, Gramatica gramatica) {
+        switch (gramatica.getTipo()) {
+            case ESCRITURA:
+                for (int i = 0; i < gramatica.getTokensGramatica().size(); i++) {
+                    if (i != 0 && i != gramatica.getTokensGramatica().size() - 1) {
+                        if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.LITERAL)) {
+                            dato += gramatica.getTokensGramatica().get(i).getValor().replace(String.valueOf('"'), "");
+                        } else if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.NUMERO)) {
+                            dato += gramatica.getTokensGramatica().get(i).getValor();
+                        } else {
+                            dato += gramatica.getTokensGramatica().get(i).getValor();
+                        }
+                    }
+                }
+                break;
+
+            case REPETIR:
+                for (int j = 0; j < Integer.parseInt(gramatica.getTokensGramatica().get(1).getValor()); j++) {
+                    for (int i = 0; i < gramatica.getTokensGramatica().size(); i++) {
+
+                        if (i != 0 && i != 1 && i != 2 && i != gramatica.getTokensGramatica().size() - 1) {
+
+                            if (!gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.PALABRAR)) {
+                                if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.LITERAL)) {
+                                    dato += gramatica.getTokensGramatica().get(i).getValor().replace(String.valueOf('"'), "") + "\n";
+                                } else if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.NUMERO)) {
+                                    dato += gramatica.getTokensGramatica().get(i).getValor() + "\n";
+                                } else {
+                                    dato += gramatica.getTokensGramatica().get(i).getValor() + "\n";
+                                }
+                            }
+                        }
+                    }
+
+                }
+                break;
+            case CONDICIONAL:
+                for (int i = 0; i < gramatica.getTokensGramatica().size(); i++) {
+                    if (i != 0 && i != 1 && i != 2 && i != gramatica.getTokensGramatica().size() - 1) {
+                        if (!gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.PALABRAR) && gramatica.getTokensGramatica().get(1).getValor().equals("VERDADERO")) {
+                            if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.LITERAL)) {
+                                dato += gramatica.getTokensGramatica().get(i).getValor().replace(String.valueOf('"'), "") + "\n";
+                            } else if (gramatica.getTokensGramatica().get(i).getTipo().equals(TipoToken.NUMERO)) {
+                                dato += gramatica.getTokensGramatica().get(i).getValor() + "\n";
+                            } else {
+                                dato += gramatica.getTokensGramatica().get(i).getValor() + "\n";
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case ASIGNACIÓN:
+                for (int i = 0; i < gramatica.getTokensGramatica().size(); i++) {
+                    if (i != gramatica.getTokensGramatica().size() - 1) {
+
+                        dato += gramatica.getTokensGramatica().get(i).getValor() + " ";
+
+                    }
+                }
+                break;
+        }
+        return dato;
     }
 
 }
