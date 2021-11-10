@@ -8,6 +8,7 @@ GUI/PrincipalGUI$4.class
 GUI/BusquedaGUI.class
 GUI/PrincipalGUI$13.class
 GUI/ReportesGUI.class
+GUI/PrincipalGUI$19.class
 Objetos/Texto.class
 GUI/GuardarCambiosGUI$2.class
 GUI/PrincipalGUI$7.class
@@ -28,6 +29,7 @@ Enums/TipoToken.class
 GUI/PrincipalGUI$6.class
 Clases/InformacionGramaticas.class
 GUI/BusquedaGUI$2.class
+GUI/PrincipalGUI$18.class
 Clases/LectorAnalizadorL$1.class
 Clases/LectorAnalizadorS.class
 Archivos/LectorArchivosEnTexto.class
@@ -46,6 +48,7 @@ Clases/AnalizadorS$1.class
 Clases/LectorAnalizadorS$1.class
 GUI/PrincipalGUI$17.class
 GUI/InicioGUI.class
+Controladores/ControlPrincipalAL$1.class
 GUI/ReportesGUI$5.class
 Archivos/EscritorArchivosTexto.class
 GUI/PrincipalGUI$9.class
